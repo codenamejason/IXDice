@@ -1,0 +1,23 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "back end or ixdice",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codenamejason/IXDice.git"
+  },
+  "keywords": [
+    "ixc",
+    "dice"
+  ],
+  "author": "Jason Romero",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codenamejason/IXDice/issues"
+  },
+  "homepage": "https://github.com/codenamejason/IXDice#readme"
+}
