@@ -16,6 +16,77 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import './App.css';
 
+var Roll = require('roll'),
+    roll = new Roll();
+
+var oneDie = roll.roll('d10');
+console.log(oneDie.result); //random number between 1 and 6 (inclusive)
+
+var twoTwenties = roll.roll('2d20');
+console.log(twoTwenties.result); //random number between 2 and 40 (inclusive)
+
+var bunchOfDice = roll.roll('2d20+1d12');
+console.log(bunchOfDice.result); //random number between 3 and 52 (inclusive)
+
+var chance = roll.roll('d%'); //same as '1d100', 'd100', or '1d%'
+console.log(chance.result); //random number between 1 and 100 (inclusive)
+
+var attack = roll.roll('2d6+2');
+console.log(attack.result); //random number between 3 and 8 (inclusive)
+
+var yahtzee = roll.roll('5d6');
+console.log(yahtzee.rolled); //yahtzee.rolled will return something like [5, 2, 4, 6, 1] rather than the sum
+
+var blessedSneaker = roll.roll('2d20b1+1d4+5');
+console.log(blessedSneaker.rolled); // blessedSneaker.rolled will return an array containing an array for each component that is a roll of the dice, in the order in which they occurred, e.g. [[19,3],[1]]
+
+var pickBestTwo = roll.roll('6d20b2'); //roll 6 dice and give me the 2 highest
+console.log(pickBestTwo.calculations[1]); //pickBestTwo.calculations[0] is the same as .result, .calculations[1] is prior to the sum operation
+
+var attack = roll.roll({
+  quantity: 2,
+  sides: 6,
+  transformations: [ //can list n-number of pipeline operations to perform on the result
+    'sum', //take the array of rolled dice and sum them together
+    ['add', 2] //add 2 to the sum
+  ]
+});
+console.log(attack.result); //random number between 3 and 8 (inclusive)
+
+//Using custom transformations:
+// var dropOnes = function(results){
+//   return results.filter(function (result) {
+//     return result !== 1;
+//   });
+// };
+// var noOnes = roll.roll({
+//   quantity: 5,
+//   sides: 4,
+//   transformations: [
+//     dropOnes, // remove any 1s because we have teh lucky bootz
+//     'sum'
+//   ]
+// });
+
+//Using a custom seed:
+// var srand = require('srand'); //https://github.com/isaacs/node-srand (npm install srand)
+// srand.seed(1000);
+
+// roll = new Roll(function () {
+//   return srand.random();
+// });
+
+console.log(roll.roll('2d6+5').result);
+
+// Validating user input
+var userInput = 'this isn\'t a valid roll',
+  valid = roll.validate(userInput);
+
+if (!valid) {
+  console.error('"%s" is not a valid input string for your roll!', userInput);
+}
+
+
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
@@ -192,13 +263,13 @@ const PrimarySearchAppBar = () => {
                     </div>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
-                      <IconButton aria-label="show 4 new mails" color="inherit">
-                          <Badge badgeContent={4} color="secondary">
+                      <IconButton aria-label="show new mails" color="inherit">
+                          <Badge badgeContent={0} color="secondary">
                               <MailIcon />
                           </Badge>
                       </IconButton>
-                      <IconButton aria-label="show 17 new notifications" color="inherit">
-                          <Badge badgeContent={17} color="secondary">
+                      <IconButton aria-label="show new notifications" color="inherit">
+                          <Badge badgeContent={0} color="secondary">
                               <NotificationsIcon />
                           </Badge>
                       </IconButton>
