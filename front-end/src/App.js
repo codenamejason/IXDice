@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import Checkbox from '@material-ui/core/Checkbox';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -21,7 +22,7 @@ import './dice.css';
 var Roll = require('roll');
 const roll = new Roll();
 
-var oneDie = roll.roll('d10');
+var oneDie = roll.roll('d6');
 console.log(oneDie.result); //random number between 1 and 10 (inclusive)
 
 var twoTwenties = roll.roll('2d20');
@@ -306,8 +307,22 @@ const PrimarySearchAppBar = () => {
     );
 }
 
+
+
 function App() {
-  //document.getElementById("roll-button").addEventListener("click", rollDice);
+  const [oddChecked, setOddChecked] = useState(false);
+  const [evenChecked, setEvenChecked] = useState(false);
+  let theRoll = roll.roll('1d6');
+
+  const handleEvenCheckedChange = (event) => {
+    setEvenChecked(true);
+    setOddChecked(false);
+  }
+
+  const handleOddCheckedChange = (event) => {
+    setOddChecked(true);
+    setEvenChecked(false);
+  }
 
   const rollDice = () => {
     const dice = [...document.querySelectorAll(".die-list")];
@@ -315,6 +330,9 @@ function App() {
         toggleClasses(die);
         die.dataset.roll = getRandomNumber(1, 6);
       });
+
+      setOddChecked(false);
+      setEvenChecked(false);
   }
 
   const toggleClasses = (die) => {
@@ -325,13 +343,19 @@ function App() {
   const getRandomNumber = (min, max) => {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1) + min);
+    let result = roll.roll('1d6');
+    console.info(result.rolled)
+    return result.result;
+    //return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
 
   return (
     <div className="App">
       <PrimarySearchAppBar />
+      <div>
+         <h3>ODD -OR- EVEN</h3>
+      </div>
       <div>
           <div className="dice">
           <ol className="die-list even-roll" data-roll="1" id="die-1">
@@ -405,6 +429,22 @@ function App() {
             </li>
           </ol>
         </div>
+        <div>
+        <label>Even</label>
+        <Checkbox
+          color='primary'
+          checked={evenChecked}
+          onChange={handleEvenCheckedChange}
+          inputProps={{ 'aria-label': 'even checkbox' }}
+        />
+        <label>Odd</label>
+        <Checkbox
+          color='secondary'
+          checked={oddChecked}
+          onChange={handleOddCheckedChange}
+          inputProps={{ 'aria-label': 'odd checkbox' }}
+        />
+        </div><br /><br />
         <Button 
           variant='outlined'
           color='secondary'
