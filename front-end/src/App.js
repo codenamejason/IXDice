@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
@@ -15,12 +16,13 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import './App.css';
+import './dice.css';
 
-var Roll = require('roll'),
-    roll = new Roll();
+var Roll = require('roll');
+const roll = new Roll();
 
 var oneDie = roll.roll('d10');
-console.log(oneDie.result); //random number between 1 and 6 (inclusive)
+console.log(oneDie.result); //random number between 1 and 10 (inclusive)
 
 var twoTwenties = roll.roll('2d20');
 console.log(twoTwenties.result); //random number between 2 and 40 (inclusive)
@@ -31,7 +33,7 @@ console.log(bunchOfDice.result); //random number between 3 and 52 (inclusive)
 var chance = roll.roll('d%'); //same as '1d100', 'd100', or '1d%'
 console.log(chance.result); //random number between 1 and 100 (inclusive)
 
-var attack = roll.roll('2d6+2');
+var attack = roll.roll('2d6+2'); // add dynamic modifier
 console.log(attack.result); //random number between 3 and 8 (inclusive)
 
 var yahtzee = roll.roll('5d6');
@@ -159,6 +161,7 @@ const PrimarySearchAppBar = () => {
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+   
     const handleProfileMenuOpen = (event) => {
       setAnchorEl(event.currentTarget);
     };
@@ -304,12 +307,113 @@ const PrimarySearchAppBar = () => {
 }
 
 function App() {
+  //document.getElementById("roll-button").addEventListener("click", rollDice);
+
+  const rollDice = () => {
+    const dice = [...document.querySelectorAll(".die-list")];
+    dice.forEach(die => {
+        toggleClasses(die);
+        die.dataset.roll = getRandomNumber(1, 6);
+      });
+  }
+
+  const toggleClasses = (die) => {
+    die.classList.toggle("odd-roll");
+    die.classList.toggle("even-roll");
+  }
+
+  const getRandomNumber = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+
   return (
     <div className="App">
       <PrimarySearchAppBar />
-      <header className="App-header">
-        Coming Soon!
-      </header>
+      <div>
+          <div className="dice">
+          <ol className="die-list even-roll" data-roll="1" id="die-1">
+            <li className="die-item" data-side="1">
+              <span className="dot"></span>
+            </li>
+            <li className="die-item" data-side="2">
+              <span className="dot"></span>
+              <span className="dot"></span>
+            </li>
+            <li className="die-item" data-side="3">
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+            </li>
+            <li className="die-item" data-side="4">
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+            </li>
+            <li className="die-item" data-side="5">
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+            </li>
+            <li className="die-item" data-side="6">
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+            </li>
+          </ol>
+          <ol className="die-list odd-roll" data-roll="1" id="die-2">
+            <li className="die-item" data-side="1">
+              <span className="dot"></span>
+            </li>
+            <li className="die-item" data-side="2">
+              <span className="dot"></span>
+              <span className="dot"></span>
+            </li>
+            <li className="die-item" data-side="3">
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+            </li>
+            <li className="die-item" data-side="4">
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+            </li>
+            <li className="die-item" data-side="5">
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+            </li>
+            <li className="die-item" data-side="6">
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+              <span className="dot"></span>
+            </li>
+          </ol>
+        </div>
+        <Button 
+          variant='outlined'
+          color='secondary'
+          id="roll-button"
+          onClick={rollDice}
+        >
+          Roll Dice
+        </Button>        
+        </div>
     </div>
   );
 }
