@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
@@ -430,20 +431,26 @@ function App() {
           </ol>
         </div>
         <div>
-        <label>Even</label>
-        <Checkbox
-          color='primary'
-          checked={evenChecked}
-          onChange={handleEvenCheckedChange}
-          inputProps={{ 'aria-label': 'even checkbox' }}
+        <FormControlLabel
+            control={
+              <Checkbox
+                color='primary'
+                checked={evenChecked}
+                onChange={handleEvenCheckedChange}
+                name="even" 
+              />}
+            label="Even"
         />
-        <label>Odd</label>
-        <Checkbox
-          color='secondary'
-          checked={oddChecked}
-          onChange={handleOddCheckedChange}
-          inputProps={{ 'aria-label': 'odd checkbox' }}
-        />
+        <FormControlLabel
+            control={
+              <Checkbox
+                color='secondary'
+                checked={oddChecked}
+                onChange={handleOddCheckedChange}
+                name="odd" 
+              />}
+            label="Odd"
+        />       
         </div><br /><br />
         <Button 
           variant='outlined'
