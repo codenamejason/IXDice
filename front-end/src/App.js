@@ -47,15 +47,15 @@ console.log(blessedSneaker.rolled); // blessedSneaker.rolled will return an arra
 var pickBestTwo = roll.roll('6d20b2'); //roll 6 dice and give me the 2 highest
 console.log(pickBestTwo.calculations[1]); //pickBestTwo.calculations[0] is the same as .result, .calculations[1] is prior to the sum operation
 
-var attack = roll.roll({
-  quantity: 2,
-  sides: 6,
-  transformations: [ //can list n-number of pipeline operations to perform on the result
-    'sum', //take the array of rolled dice and sum them together
-    ['add', 2] //add 2 to the sum
-  ]
-});
-console.log(attack.result); //random number between 3 and 8 (inclusive)
+// var attack = roll.roll({
+//   quantity: 2,
+//   sides: 6,
+//   transformations: [ //can list n-number of pipeline operations to perform on the result
+//     'sum', //take the array of rolled dice and sum them together
+//     ['add', 2] //add 2 to the sum
+//   ]
+// });
+// console.log(attack.result); //random number between 3 and 8 (inclusive)
 
 //Using custom transformations:
 // var dropOnes = function(results){
