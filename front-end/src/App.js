@@ -14,6 +14,11 @@ import SearchIcon from '@material-ui/icons/Search';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import StarIcon from '@material-ui/icons/Star';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
@@ -24,7 +29,7 @@ var Roll = require('roll');
 const roll = new Roll();
 
 var oneDie = roll.roll('d6');
-console.log(oneDie.result); //random number between 1 and 10 (inclusive)
+console.log(oneDie.result); //random number between 1 and 6 (inclusive)
 
 var twoTwenties = roll.roll('2d20');
 console.log(twoTwenties.result); //random number between 2 and 40 (inclusive)
@@ -83,13 +88,12 @@ console.log(pickBestTwo.calculations[1]); //pickBestTwo.calculations[0] is the s
 console.log(roll.roll('2d6+5').result);
 
 // Validating user input
-var userInput = 'this isn\'t a valid roll',
-  valid = roll.validate(userInput);
+// var userInput = 'this isn\'t a valid roll',
+//   valid = roll.validate(userInput);
 
-if (!valid) {
-  console.error('"%s" is not a valid input string for your roll!', userInput);
-}
-
+// if (!valid) {
+//   console.error('"%s" is not a valid input string for your roll!', userInput);
+// }
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -308,12 +312,18 @@ const PrimarySearchAppBar = () => {
     );
 }
 
+const App = () => {
 
 
-function App() {
   const [oddChecked, setOddChecked] = useState(false);
   const [evenChecked, setEvenChecked] = useState(false);
-  let theRoll = roll.roll('1d6');
+  const [firstDie, setFirstDie] = useState(0);
+  const [secondDie, setSecondDie] = useState(0);
+  const [result, setResult] = useState('')
+  const [results, setResults] = useState([]) // example to set up..
+
+  // track what has been rolled (last 20 rolls)
+  const whatWasRolled = []; // string array
 
   const handleEvenCheckedChange = (event) => {
     setEvenChecked(true);
@@ -327,13 +337,48 @@ function App() {
 
   const rollDice = () => {
     const dice = [...document.querySelectorAll(".die-list")];
-    dice.forEach(die => {
-        toggleClasses(die);
-        die.dataset.roll = getRandomNumber(1, 6);
+    dice.forEach((die, index) => {
+        toggleClasses(die); 
+        // roll and get the result  
+        let val = getRandomRolledNumber(6);
+        console.log(val)
+        if(index === 0) { // First die
+          setFirstDie(val)
+        } else if(index === 1) { // Second die
+          setSecondDie(val)
+        }       
+        die.dataset.roll = val;
       });
 
+      // add the result of the dice to the array
+      whatWasRolled.push()
+      
+      // reset checkboxes
       setOddChecked(false);
       setEvenChecked(false);
+    }
+
+  const whatIsResult = () => {
+    var res = (firstDie + secondDie) % 2;
+    if (res === 0){
+      setResult('EVEN')
+      
+      if(evenChecked){
+        // winner!!!
+        console.log('Even Winner!')
+      }
+      
+      return 'EVEN'
+    } else if (res === 1){
+      setResult('ODD')
+      
+      if(oddChecked) {
+        // winner!!!
+        console.log('Odd Winner!')
+      }
+
+      return 'ODD';
+    }
   }
 
   const toggleClasses = (die) => {
@@ -341,15 +386,16 @@ function App() {
     die.classList.toggle("even-roll");
   }
 
-  const getRandomNumber = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    let result = roll.roll('1d6');
-    console.info(result.rolled)
+  const getRandomRolledNumber = (die) => {
+    let result = roll.roll(`d${die}`);
+    // show what we just rolled
+    //console.info(result.rolled);
+    
     return result.result;
     //return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
+  //let content = 
 
   return (
     <div className="App">
@@ -460,6 +506,19 @@ function App() {
         >
           Roll Dice
         </Button>        
+        </div><br /><br />        
+        <div>
+          {firstDie} | {secondDie}<br /><br />
+          
+        </div><br /><br />
+        <div className='roll-results-last-20'>
+          <ol>
+            {whatWasRolled.map((item, index) => {
+              console.log(item, index)
+              return (<li key={index} id='roll-results-list'>{item}</li>)
+            })}
+                       
+          </ol>
         </div>
     </div>
   );
