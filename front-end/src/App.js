@@ -27,6 +27,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import './App.css';
 import './dice.css';
+import backgroundImg from './images/creepyEyesAndWoman.jpg';
 
 var Roll = require('roll');
 const roll = new Roll();
@@ -98,10 +99,15 @@ console.log(pickBestTwo.calculations[1]); //pickBestTwo.calculations[0] is the s
 //   console.error('"%s" is not a valid input string for your roll!', userInput);
 // }
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
-    maxWidth: 752,
+    textAlign: 'center',
+    color: 'white',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    backgroundImage: `url(${backgroundImg})`,
   },
   grow: {
     flexGrow: 1,
@@ -128,6 +134,7 @@ const useStyles = makeStyles((theme) => ({
     color: 'rgba(33, 203, 243)',
     padding: '15px',
     margin: '10px',
+    height: '500px',
     backgroundColor: fade(theme.palette.common.white, 0.15),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
@@ -453,8 +460,9 @@ const App = () => {
   }
 
   return (
-    <div className="App">
+    <div>
       <PrimarySearchAppBar />
+      <div className={classes.root}>
       <div>
          <h3>ODD -OR- EVEN</h3>
          <h4>Doubles pays 11 to 1 all others pay 2 to 1</h4>
@@ -631,6 +639,7 @@ const App = () => {
             </Paper>
           </Grid>         
         </Grid>
+        </div>
         </div>
     </div>
   );
