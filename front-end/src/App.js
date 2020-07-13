@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -18,6 +19,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Paper from '@material-ui/core/Paper';
+import FormGroup from '@material-ui/core/FormGroup';
 import StarIcon from '@material-ui/icons/Star';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -96,6 +99,10 @@ console.log(roll.roll('2d6+5').result);
 // }
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    maxWidth: 752,
+  },
   grow: {
     flexGrow: 1,
   },
@@ -107,6 +114,10 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+  },
+  paper: {
+    padding: '15px',
+    margin: '10px',
   },
   search: {
     position: 'relative',
@@ -313,7 +324,7 @@ const PrimarySearchAppBar = () => {
 }
 
 const App = () => {
-
+  const classes = useStyles();
 
   const [oddChecked, setOddChecked] = useState(false);
   const [evenChecked, setEvenChecked] = useState(false);
@@ -321,9 +332,12 @@ const App = () => {
   const [secondDie, setSecondDie] = useState(0);
   const [result, setResult] = useState('')
   const [results, setResults] = useState([]) // example to set up..
+  const [rolledEven, setRolledEven] = useState([]);
+  const [rolledOdds, setRolledOdds] = useState([]);
+  const [rolledDoubles, setRolledDoubles] = useState(0);
+  const [isWinner, setIsWinner] = useState(false);
 
   // track what has been rolled (last 20 rolls)
-  const whatWasRolled = []; // string array
 
   const handleEvenCheckedChange = (event) => {
     setEvenChecked(true);
@@ -344,14 +358,13 @@ const App = () => {
         console.log(val)
         if(index === 0) { // First die
           setFirstDie(val)
+          
         } else if(index === 1) { // Second die
           setSecondDie(val)
         }       
         die.dataset.roll = val;
       });
 
-      // add the result of the dice to the array
-      whatWasRolled.push()
       
       // reset checkboxes
       setOddChecked(false);
@@ -379,6 +392,22 @@ const App = () => {
 
       return 'ODD';
     }
+  }
+
+  const generateEvens = (element) => {
+    return rolledEven.map((value) =>
+      React.cloneElement(element, {
+        key: value,
+      }),
+    );
+  }
+
+  const generateOdds = (element) => {
+    return rolledOdds.map((value) =>
+      React.cloneElement(element, {
+        key: value,
+      }),
+    );
   }
 
   const toggleClasses = (die) => {
@@ -513,12 +542,54 @@ const App = () => {
         </div><br /><br />
         <div className='roll-results-last-20'>
           <ol>
-            {whatWasRolled.map((item, index) => {
+            {results.map((item, index) => {
               console.log(item, index)
               return (<li key={index} id='roll-results-list'>{item}</li>)
             })}
                        
           </ol>
+        </div>
+        <div>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <Paper className={classes.paper}>
+            <Typography variant="h6" className={classes.title}>
+              Evens
+            </Typography>
+            <div className={classes.demo}>
+              <List dense={true}>
+                {generateEvens(
+                  <ListItem>
+                    <ListItemText
+                      primary="Rolled Evens"
+                      secondary={true ? '[5], [3]' : null}
+                    />
+                  </ListItem>,
+                )}
+              </List>
+            </div>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Paper className={classes.paper}>
+            <Typography variant="h6" className={classes.title}>
+              Odds
+            </Typography>
+            <div className={classes.demo}>
+              <List dense={true}>
+                {generateOdds(
+                  <ListItem>
+                    <ListItemText
+                      primary="Rolled Odds"
+                      secondary={true ? '[4], [3]' : null}
+                    />
+                  </ListItem>,
+                )}
+              </List>
+            </div> 
+            </Paper>
+          </Grid>         
+        </Grid>
         </div>
     </div>
   );
