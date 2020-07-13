@@ -88,7 +88,7 @@ console.log(pickBestTwo.calculations[1]); //pickBestTwo.calculations[0] is the s
 //   return srand.random();
 // });
 
-console.log(roll.roll('2d6+5').result);
+//console.log(roll.roll('2d6').result);
 
 // Validating user input
 // var userInput = 'this isn\'t a valid roll',
@@ -109,6 +109,15 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
+  button: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    border: 0,
+    borderRadius: 5,
+    boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
+    color: 'white',
+    height: 48,
+    padding: '0 30px',
+  },
   title: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
@@ -116,8 +125,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   paper: {
+    color: 'rgba(33, 203, 243)',
     padding: '15px',
     margin: '10px',
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
   },
   search: {
     position: 'relative',
@@ -328,6 +342,7 @@ const App = () => {
 
   const [oddChecked, setOddChecked] = useState(false);
   const [evenChecked, setEvenChecked] = useState(false);
+  const [doublesChecked, setDoublesChecked] = useState(false);
   const [firstDie, setFirstDie] = useState(0);
   const [secondDie, setSecondDie] = useState(0);
   const [result, setResult] = useState('')
@@ -335,18 +350,33 @@ const App = () => {
   const [rolledEven, setRolledEven] = useState([]);
   const [rolledOdds, setRolledOdds] = useState([]);
   const [rolledDoubles, setRolledDoubles] = useState(0);
+  const [myPrediction, setMyPrediction] = useState()
   const [isWinner, setIsWinner] = useState(false);
 
   // track what has been rolled (last 20 rolls)
 
   const handleEvenCheckedChange = (event) => {
+    console.log(event.target.value)
+    setMyPrediction(event.target.value)
     setEvenChecked(true);
+    setDoublesChecked(false);
     setOddChecked(false);
   }
 
   const handleOddCheckedChange = (event) => {
+    console.log(event.target.value)
+    setMyPrediction(event.target.value)
     setOddChecked(true);
+    setDoublesChecked(false);
     setEvenChecked(false);
+  }
+
+  const handleDoublesCheckedChange = (event) => {
+    console.log(event.target.value)
+    setMyPrediction(event.target.value)
+    setDoublesChecked(true);
+    setOddChecked(false);
+    setEvenChecked(true);
   }
 
   const rollDice = () => {
@@ -368,6 +398,7 @@ const App = () => {
       
       // reset checkboxes
       setOddChecked(false);
+      setDoublesChecked(false);
       setEvenChecked(false);
     }
 
@@ -375,7 +406,7 @@ const App = () => {
     var res = (firstDie + secondDie) % 2;
     if (res === 0){
       setResult('EVEN')
-      
+      rolledEven(true)
       if(evenChecked){
         // winner!!!
         console.log('Even Winner!')
@@ -384,7 +415,7 @@ const App = () => {
       return 'EVEN'
     } else if (res === 1){
       setResult('ODD')
-      
+      rolledOdds(true)
       if(oddChecked) {
         // winner!!!
         console.log('Odd Winner!')
@@ -417,20 +448,16 @@ const App = () => {
 
   const getRandomRolledNumber = (die) => {
     let result = roll.roll(`d${die}`);
-    // show what we just rolled
-    //console.info(result.rolled);
-    
     return result.result;
     //return Math.floor(Math.random() * (max - min + 1) + min);
   }
-
-  //let content = 
 
   return (
     <div className="App">
       <PrimarySearchAppBar />
       <div>
          <h3>ODD -OR- EVEN</h3>
+         <h4>Doubles pays 11 to 1 all others pay 2 to 1</h4>
       </div>
       <div>
           <div className="dice">
@@ -512,7 +539,8 @@ const App = () => {
                 color='primary'
                 checked={evenChecked}
                 onChange={handleEvenCheckedChange}
-                name="even" 
+                name="even"
+                value="even"
               />}
             label="Even"
         />
@@ -522,12 +550,25 @@ const App = () => {
                 color='secondary'
                 checked={oddChecked}
                 onChange={handleOddCheckedChange}
-                name="odd" 
+                name="odd"
+                value='odd'
               />}
             label="Odd"
+        />  
+        <FormControlLabel
+            control={
+              <Checkbox
+                color='secondary'
+                checked={doublesChecked}
+                onChange={handleDoublesCheckedChange}
+                name="double"
+                value='double'
+              />}
+            label="Doubles"
         />       
         </div><br /><br />
         <Button 
+          className={classes.button}
           variant='outlined'
           color='secondary'
           id="roll-button"
@@ -535,11 +576,11 @@ const App = () => {
         >
           Roll Dice
         </Button>        
-        </div><br /><br />        
-        <div>
-          {firstDie} | {secondDie}<br /><br />
-          
-        </div><br /><br />
+        </div><br />
+        <h5>My Prediction</h5>
+        {/* show what the user selected here */}
+
+        <br /><br />
         <div className='roll-results-last-20'>
           <ol>
             {results.map((item, index) => {
